@@ -9,7 +9,7 @@ LIMIT_FOR_COMMENT_TITLE = 20
 
 
 class Location(PublishedModel):
-    name = models.CharField(max_length=256, 
+    name = models.CharField(max_length=256,
                             verbose_name="Название места")
 
     class Meta:

@@ -36,7 +36,8 @@ def category_query():
     """Вернуть результат запроса
     к таблице blog_category.
     """
-    query_set = Category.objects.values("title", "description").filter(
+    query_set = Category.objects.values("title",
+                                        "description").filter(
         is_published=True
     )
     return query_set
@@ -69,7 +70,9 @@ def category_posts(request, category_slug):
         slug=category_slug,
     )
     post_list = (
-        post_query().filter(category__slug=category_slug).order_by("-pub_date")[:10]
+        post_query()
+        .filter(category__slug=category_slug).
+        order_by("-pub_date")[:10]
     )
     context = {"category": category, "post_list": post_list}
     return render(request, template, context)
