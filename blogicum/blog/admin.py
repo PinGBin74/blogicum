@@ -1,92 +1,50 @@
 from django.contrib import admin
 
-from blog.models import Category, Comment, Location, Post
-
-TEXT = "Описание публикации."
+from .models import Category, Location, Post, Comment
 
 
-@admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
-    list_display = (
-        "title",
-        "text",
-        "is_published",
-        "category",
-        "location",
-        "created_at",
-        "image",
-    )
-    list_editable = (
-        "is_published",
-        "category",
-        "location",
-    )
-    search_fields = ("title",)
-    list_filter = ("category",)
-    list_display_links = ("title",)
-    fieldsets = (
-        (
-            "Блок-1",
-            {
-                "fields": (
-                    "title",
-                    "author",
-                    "is_published",
-                ),
-                "description": "%s" % TEXT,
-            },
-        ),
-        (
-            "Доп. информация",
-            {
-                "classes": ("wide", "extrapretty"),
-                "fields": (
-                    "text",
-                    "category",
-                    "location",
-                    "pub_date",
-                    "image",
-                ),
-            },
-        ),
-    )
-
-
-class PostInline(admin.TabularInline):
-    model = Post
-    extra = 0
-
-
-@admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    inlines = (PostInline,)
-    list_display = (
-        "title",
-        "slug",
-        "is_published",
-        "description",
-        "created_at",
-    )
-    list_filter = ("title",)
-
-
-@admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
-    inlines = (PostInline,)
     list_display = (
         "name",
         "is_published",
+        "created_at",
     )
-    list_filter = ("name",)
+    list_editable = ("is_published",)
 
 
-@admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
     list_display = (
-        "text",
-        "author",
+        "title",
+        "description",
+        "slug",
         "is_published",
         "created_at",
     )
-    list_filter = ("author",)
     list_editable = ("is_published",)
+
+
+class PostAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "author",
+        "category",
+        "location",
+        "is_published",
+        "pub_date",
+        "comment_count",
+    )
+    list_editable = ("is_published",)
+    list_filter = (
+        "category",
+        "location",
+    )
+
+    @admin.display(description="Комментариев")
+    def comment_count(self, post):
+        return post.comments.count()
+
+
+admin.site.register(Post, PostAdmin)
+admin.site.register(Location, LocationAdmin)
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Comment)
