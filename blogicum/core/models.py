@@ -2,7 +2,7 @@ from django.db import models
 
 
 class PublishedModel(models.Model):
-    """Абстрактная модель. 
+    """ Абстрактная модель. 
     Добвляет флаги is_published, created_at.
     """
 
